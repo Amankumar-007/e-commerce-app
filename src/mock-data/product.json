@@ -1,0 +1,98 @@
+[
+    {
+      "id": 1,
+      "name": "Smart Watch",
+      "price": 199.99,
+      "rating": 4,
+      "category": "Gadgets",
+      "image": "https://images.pexels.com/photos/267394/pexels-photo-267394.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 2,
+      "name": "Winter Jacket",
+      "price": 80.5,
+      "rating": 3,
+      "category": "Apparel",
+      "image": "https://www.lmonteinternational.com/cdn/shop/files/JLM9988BLACK.jpg?v=1730269249&width=823"
+    },
+    {
+      "id": 3,
+      "name": "Gaming Laptop",
+      "price": 1200.0,
+      "rating": 5,
+      "category": "Computers",
+      "image": "https://images.pexels.com/photos/67760/pexels-photo-67760.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 4,
+      "name": "Coffee Maker",
+      "price": 50.0,
+      "rating": 2,
+      "category": "Kitchen",
+      "image": "https://cdn.staticans.com/image/tr:e-sharpen-01,h-500,w-500,cm-pad_resize/data/philips/08sept2023/234-2022_02_03-7432MI.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Denim Jeans",
+      "price": 45.99,
+      "rating": 4,
+      "category": "Apparel",
+      "image": "https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 6,
+      "name": "Bluetooth Speaker",
+      "price": 60.0,
+      "rating": 5,
+      "category": "Gadgets",
+      "image": "https://m.media-amazon.com/images/I/41W3E3pBVYL._SX300_SY300_QL70_FMwebp_.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Desk Chair",
+      "price": 150.0,
+      "rating": 3,
+      "category": "Furniture",
+      "image": "https://www.ikea.com/in/en/images/products/oerfjaell-childrens-desk-chair-white-vissle-light-grey__0977960_pe813958_s5.jpg"
+    },
+    {
+      "id": 8,
+      "name": "LED TV",
+      "price": 400.0,
+      "rating": 4,
+      "category": "Electronics",
+      "image": "https://images.pexels.com/photos/1201996/pexels-photo-1201996.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 9,
+      "name": "Digital Camera",
+      "price": 350.0,
+      "rating": 5,
+      "category": "Electronics",
+      "image": "https://images.pexels.com/photos/276287/pexels-photo-276287.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 10,
+      "name": "Sneakers",
+      "price": 90.0,
+      "rating": 4,
+      "category": "Apparel",
+      "image": "https://images.pexels.com/photos/267202/pexels-photo-267202.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 11,
+      "name": "Office Lamp",
+      "price": 45.5,
+      "rating": 3,
+      "category": "Furniture",
+      "image": "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "id": 12,
+      "name": "Wall Art",
+      "price": 25.0,
+      "rating": 4,
+      "category": "Decor",
+      "image": "https://media.architecturaldigest.com/photos/60107ad3ae84a5b8c94ceaa4/16:9/w_2560%2Cc_limit/Room1.JPG"
+    }
+  ]
