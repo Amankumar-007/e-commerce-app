@@ -11,6 +11,7 @@ import {
 } from "../redux/cartSlice";
 import ImageSlider from "./slider/imageSlider";
 import productData from "../mock-data/product.json";
+import Footer from "../components/Footer/Footer";
 
 const Home = () => {
   const slides = [
@@ -242,6 +243,7 @@ const Home = () => {
       {paymentMessage && (
         <div className="payment-message">{paymentMessage}</div>
       )}
+      <Footer/>
     </div>
   );
 };

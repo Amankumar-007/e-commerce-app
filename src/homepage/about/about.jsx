@@ -1,6 +1,7 @@
 
 import './About.css';
 import Navbar from '../navbar/Navbar';
+import Footer from '../../components/Footer/Footer';
 
 const About = () => {
   return (<>
@@ -35,6 +36,7 @@ const About = () => {
         </div>
       </div>
     </div>
+    <Footer/>
     </>
   );
 };

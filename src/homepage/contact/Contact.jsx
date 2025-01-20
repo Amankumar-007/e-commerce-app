@@ -1,3 +1,4 @@
+import Footer from "../../components/Footer/Footer";
 import Navbar from "../navbar/Navbar";
 
 const Contact = () => {
@@ -77,6 +78,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
+    <Footer/>
     </>
   );
 };
