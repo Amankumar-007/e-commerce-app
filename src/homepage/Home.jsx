@@ -1,163 +1,143 @@
 import { useState, useEffect } from "react";
-import "./home.css";
-import PaymentGateway from "./payment-Gateway/PaymentGateway";
-import Navbar from "./navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addToCart,
-  decreaseQuantity,
-  increaseQuantity,
-  removeFromCart,
-} from "../redux/cartSlice";
-import ImageSlider from "./slider/imageSlider";
-import productData from "../mock-data/product.json";
+import { addToCart, decreaseQuantity, increaseQuantity, removeFromCart } from "../redux/cartSlice";
+import { useNavigate } from "react-router-dom";
+import Navbar from "./navbar/Navbar";
 import Footer from "../components/Footer/Footer";
+import PaymentGateway from "./payment-Gateway/PaymentGateway";
+import { motion } from "framer-motion";
+import "./slider/imageSlider"; // Ensure this path is correct
 
-const Home = () => {
-  const slides = [
-    {
-      url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/56cb2ccc444c9596.jpeg?q=20",
-      title: "beach",
-    },
-    {
-      url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/1e5209f72f68798b.jpeg?q=20",
-      title: "boat",
-    },
-    {
-      url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/54b578159b0db6ae.jpg?q=20",
-      title: "forest",
-    },
-    {
-      url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/abf1dbfce2cd6e44.jpg?q=20",
-      title: "city",
-    },
-    {
-      url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/8d126c44366f256b.jpeg?q=20",
-      title: "italy",
-    },
-  ];
-  const containerStyles = {
-    // width: "92vw",
-    height: "38vh",
-    margin: "0 0 40px 0",
+const slides = [
+  { url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/56cb2ccc444c9596.jpeg?q=20" },
+  { url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/1e5209f72f68798b.jpeg?q=20" },
+  { url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/54b578159b0db6ae.jpg?q=20" },
+  { url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/abf1dbfce2cd6e44.jpg?q=20" },
+  { url: "https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/8d126c44366f256b.jpeg?q=20" },
+];
+
+const ImageSlider = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
   };
 
-  const initialItems = productData;
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const [items] = useState(initialItems);
-  const [filteredItems, setFilteredItems] = useState(initialItems);
+  return (
+    <div className="relative w-full h-64 overflow-hidden rounded-lg shadow-lg">
+      <img
+        src={slides[currentIndex].url}
+        alt="slide"
+        className="w-full h-full object-cover transition duration-700 ease-in-out"
+      />
+      <div className="absolute bottom-2 right-2 text-white bg-black bg-opacity-50 px-2 py-1 rounded">
+        {currentIndex + 1} / {slides.length}
+      </div>
+    </div>
+  );
+};
+
+const Home = () => {
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState(1000);
   const [rating, setRating] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]);
-  // Add theme state
-  const [showPayment, setShowPayment] = useState(false); // State to toggle Payment Gateway
-  const [paymentMessage, setPaymentMessage] = useState(""); // For payment status messages
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => {
-      const items = document.querySelectorAll(".item-card");
-      items.forEach((item) => {
-        const rect = item.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) {
-          item.classList.add("visible");
-        }
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        const formatted = data.map((item) => ({
+          id: item.id,
+          name: item.title,
+          image: item.image,
+          price: item.price,
+          category: item.category,
+          rating: Math.round(item.rating.rate),
+        }));
+        setItems(formatted);
+        setFilteredItems(formatted);
+      })
+      .catch((err) => console.error("Failed to fetch products:", err));
   }, []);
 
   useEffect(() => {
     let filtered = items;
-
     if (searchTerm) {
       filtered = filtered.filter((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
     if (category) {
       filtered = filtered.filter((item) => item.category === category);
     }
-
     filtered = filtered.filter((item) => item.price <= price);
-
     if (rating) {
       filtered = filtered.filter((item) => item.rating === parseInt(rating));
     }
-
     setFilteredItems(filtered);
   }, [searchTerm, category, price, rating, items]);
 
-  const handleAddToCart = (item) => {
-    dispatch(addToCart(item));
-  };
-  const handleRemoveFromCart = (itemId) => {
-    dispatch(removeFromCart(itemId));
-  };
+  const handleAddToCart = (item) => dispatch(addToCart(item));
+  const handleRemoveFromCart = (id) => dispatch(removeFromCart(id));
+  const handleIncreaseQuantity = (id) => dispatch(increaseQuantity(id));
+  const handleDecreaseQuantity = (id) => dispatch(decreaseQuantity(id));
 
-  const handleIncreaseQuantity = (itemId) => {
-    dispatch(increaseQuantity(itemId));
-  };
-
-  const handleDecreaseQuantity = (itemId) => {
-    dispatch(decreaseQuantity(itemId));
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
+  const getTotalPrice = () => cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleCheckout = () => {
     const totalPrice = getTotalPrice();
-    const url = `/payment-gateway?totalPrice=${totalPrice}`;
-    window.open(url, "_blank", "width=600,height=700");
-  };
-  const handlePaymentSuccess = (message) => {
-    setPaymentMessage(message);
-    setShowPayment(false);
-    setCart([]); // Clear the cart after successful payment
+    window.open(`/payment-gateway?totalPrice=${totalPrice}`, "_blank", "width=600,height=700");
   };
 
-  const handlePaymentError = (message) => {
-    setPaymentMessage(message);
+  const handlePaymentSuccess = (msg) => {
+    setPaymentMessage(msg);
+    setShowPayment(false);
+    setCart([]);
+  };
+
+  const handlePaymentError = (msg) => {
+    setPaymentMessage(msg);
     setShowPayment(false);
   };
 
   return (
-    <div className={`container`}>
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
 
-      <header>
-        <h1>WELCOME</h1>
+      <header className="text-center py-6">
+        <h1 className="text-4xl font-bold text-gray-800">Welcome to Our Store</h1>
       </header>
-      <div style={containerStyles}>
-        <ImageSlider slides={slides} />
+
+      <div className="max-w-6xl mx-auto mb-8 px-4">
+        <ImageSlider />
       </div>
 
-      <input
-        type="text"
-        placeholder="Search for items..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <div className="max-w-4xl mx-auto px-4 mb-8">
+        <input
+          type="text"
+          placeholder="Search for items..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
 
-      <div className="filters">
-        <div className="filter-group">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
+        <div className="flex flex-wrap gap-4 mb-4">
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="p-2 border rounded">
             <option value="">Category</option>
             <option value="Gadgets">Gadgets</option>
             <option value="Apparel">Apparel</option>
@@ -167,17 +147,18 @@ const Home = () => {
             <option value="Electronics">Electronics</option>
             <option value="Decor">Decor</option>
           </select>
+
           <input
             type="range"
             min="0"
             max="1000"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            className="w-48"
           />
           <span>Price: ${price}</span>
-        </div>
-        <div className="filter-group">
-          <select value={rating} onChange={(e) => setRating(e.target.value)}>
+
+          <select value={rating} onChange={(e) => setRating(e.target.value)} className="p-2 border rounded">
             <option value="">Rating</option>
             <option value="1">1 Star</option>
             <option value="2">2 Stars</option>
@@ -188,62 +169,27 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="item-list">
-        {filteredItems.map((item) => (
-          <div key={item.id} className="item-card">
-            <img src={item.image} alt={item.name} className="item-image" />
-            <div className="item-name">{item.name}</div>
-            <div className="item-price">${item.price}</div>
-            <div className="item-rating">{"★".repeat(item.rating)}</div>
-            <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
-          </div>
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 mb-8">
+        {filteredItems.slice(0, 8).map((item) => (
+          <motion.div
+            key={item.id}
+            className="bg-white p-4 rounded shadow hover:shadow-lg transition"
+            whileHover={{ scale: 1.05 }}
+          >
+            <img src={item.image} alt={item.name} className="w-full h-40 object-contain mb-2" />
+            <div className="font-semibold text-lg mb-1">{item.name}</div>
+            <div className="text-gray-700 mb-1">${item.price}</div>
+            <div className="text-yellow-500 mb-2">{"★".repeat(item.rating)}</div>
+            <button onClick={() => handleAddToCart(item)} className="bg-blue-500 text-white px-4 py-2 rounded">Add to Cart</button>
+          </motion.div>
         ))}
       </div>
 
-      <div className="cart">
-        <h2>Shopping Cart</h2>
-        {cartItems.length === 0 ? (
-          <p>Your cart is empty</p>
-        ) : (
-          cartItems.map((item) => (
-            <div key={item.id} className="cart-item">
-              <div>{item.name}</div>
-              <div>${item.price}</div>
-              <div>
-                <button onClick={() => handleDecreaseQuantity(item.id)}>
-                  -
-                </button>
-                {item.quantity}
-                <button onClick={() => handleIncreaseQuantity(item.id)}>
-                  +
-                </button>
-              </div>
-              <button onClick={() => handleRemoveFromCart(item.id)}>
-                Remove
-              </button>
-            </div>
-          ))
-        )}
-
-        <div>Total: ${getTotalPrice()}</div>
-        {cartItems.length > 0 && (
-          <button className="checkout-button" onClick={handleCheckout}>
-            Checkout
-          </button>
-        )}
+      <div className="text-center mb-12">
+        <button onClick={() => navigate("/products")} className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">See More</button>
       </div>
 
-      {showPayment && (
-        <PaymentGateway
-          onPaymentSuccess={handlePaymentSuccess}
-          onPaymentError={handlePaymentError}
-        />
-      )}
-
-      {paymentMessage && (
-        <div className="payment-message">{paymentMessage}</div>
-      )}
-      <Footer/>
+      <Footer />
     </div>
   );
 };
